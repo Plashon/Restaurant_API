@@ -1,0 +1,16 @@
+{
+  "name": "restaurant_api",
+  "version": "1.0.0",
+  "description": "Reatful_api for restaurant Projest",
+  "main": "index.js",
+  "scripts": {
+    "dev":"nodemon index.js",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Phubate Nimnuan",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

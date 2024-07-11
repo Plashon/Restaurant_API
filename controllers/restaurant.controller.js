@@ -1,66 +1,64 @@
 const Restaurant = require("../models/restaurant.model");
 
-//create and save a new restaurant
+// Create and Save a new restaurant
 exports.create = async (req, res) => {
-  const { name, type, imageUrl } = req.body;
-  //validate data
-  if (!name || !type || !imageUrl) {
+  const { name, type, imgUrl } = req.body;
+  // Validate data
+  if (!name || !type || !imgUrl) {
     res.status(400).send({
-      message: "Name,Type or ImageUrl can not be empty !",
+      message: "Name, Type or ImageUrl can't be empty!",
     });
   }
-  await Restaurant.findOne({
-    where: { name: name },
-  }).then((restaurant) => {
+  await Restaurant.findOne({ where: { name: name } }).then((restaurant) => {
     if (restaurant) {
       res.status(400).send({
         message: "Restaurant already exists!",
       });
       return;
     }
-
+    // Create a new Restaurant
     const newRestaurant = {
       name: name,
       type: type,
-      imageUrl: imageUrl,
+      imgUrl: imgUrl,
     };
     Restaurant.create(newRestaurant)
       .then((data) => {
         res.send(data);
       })
-      .catch((error) =>
+      .catch((error) => {
         res.status(500).send({
           message:
             error.message ||
-            "Something error occurred while creating a restaurant",
-        })
-      );
+            "Something error occurred while creating the restaurant!",
+        });
+      });
   });
 };
 
-//get all restaurant
-
+// Get all restaurant
 exports.getAll = async (req, res) => {
-  await Restaurant.findAll().then(
-    ((data) => {
+  await Restaurant.findAll()
+    .then((data) => {
       res.send(data);
-    }).catch((error) => {
+    })
+    .catch((error) => {
       res.status(500).send({
         message:
           error.message ||
-          "Something error occurred while creating a restaurant",
+          "Something error occurred while creating the restaurant!",
       });
-    })
-  );
+    });
 };
 
+// Get by ID restaurant
 exports.getById = async (req, res) => {
   const id = req.params.id;
   await Restaurant.findByPk(id)
     .then((data) => {
-      if (data) {
+      if (!data) {
         res.status(404).send({
-          message: "No found restaurant with Id : " + id,
+          message: "No found Restaurant with ID : " + id,
         });
       } else {
         res.send(data);
@@ -70,57 +68,37 @@ exports.getById = async (req, res) => {
       res.status(500).send({
         message:
           error.message ||
-          "Something error occurred while creating a restaurant",
+          "Something error occurred while creating the restaurant!",
       });
     });
 };
 
-//update
+// Update restaurant
+// update จะ return จำนวนแถวที่แก้ไข
 exports.update = async (req, res) => {
   const id = req.params.id;
-  await Restaurant.update(res.body, {
-    where: {
-      id: id,
-    },
-  })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "Restaurant was update",
-        });
-      } else {
-        res.send({
-          message:
-            "can  not update with id : " +
-            id +
-            "maybe restaurant was not found or res.body is empty",
-        });
-      }
-    })
-    .catch((error) => {
-      res.status(500).send({
-        message: "can not update",
+  await Restaurant.update(req.body, { where: { id: id } }).then((num) => {
+    if (num == 1) {
+      res.send({ message: "Restaurant was update successfully!" });
+    } else {
+      res.send({
+        message:
+          "Can't update restaurant with ID : " +
+          id +
+          ". Maybe restaurant wasn't found or req.body is empty!",
       });
-    });
+    }
+  });
 };
 
-exports.delete = async(req,res)=>{
+// Delete restaurant
+exports.delete = async (req, res) => {
   const id = req.params.id;
-  await Restaurant.destroy({where:{id:id}})
-  .then((num)=>{
-    if(num==1){
-      res.send({
-        message:"Restaurant was deleted"
-      })
-    }else{
-      res.send({
-        message:"can not delete restaurant"
-      })
+  await Restaurant.destroy({ where: { id: id } }).then((num) => {
+    if (num == 1) {
+      res.send({ message: "Restaurant was delete successfully!" });
+    } else {
+      res.send({ message: "Can't delete restaurant ID : " + id + "." });
     }
-   
-  }).catch((error)=>{
-    res.status(500).send({
-      message:"Something error occurred while creating a restaurant "
-    })
-  })
-}
+  });
+};

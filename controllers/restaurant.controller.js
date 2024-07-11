@@ -10,7 +10,7 @@ exports.create = async (req, res) => {
     });
   }
   await Restaurant.findOne({
-    where: { name: name }
+    where: { name: name },
   }).then((restaurant) => {
     if (restaurant) {
       res.status(400).send({
@@ -18,7 +18,6 @@ exports.create = async (req, res) => {
       });
       return;
     }
-
 
     const newRestaurant = {
       name: name,
@@ -39,37 +38,89 @@ exports.create = async (req, res) => {
   });
 };
 
-
 //get all restaurant
 
-exports.getAll = async(req,res)=>{
-    await Restaurant.findAll().then((data=>{
-        res.send(data)
-    }).catch((error) =>{
-        res.status(500).send({
-            message:
-              error.message ||
-              "Something error occurred while creating a restaurant",
-          })
-    })
-)
-}
-
-exports.getById = async(req,res)=>{
-  const id = req.params.id
-  await Restaurant.findByPk(id).then((data)=>{
-    if(data){
-      res.status(404).send({
-        message: "No found restaurant with Id : "+ id
-    });
-    }else{
+exports.getAll = async (req, res) => {
+  await Restaurant.findAll().then(
+    ((data) => {
       res.send(data);
+    }).catch((error) => {
+      res.status(500).send({
+        message:
+          error.message ||
+          "Something error occurred while creating a restaurant",
+      });
+    })
+  );
+};
+
+exports.getById = async (req, res) => {
+  const id = req.params.id;
+  await Restaurant.findByPk(id)
+    .then((data) => {
+      if (data) {
+        res.status(404).send({
+          message: "No found restaurant with Id : " + id,
+        });
+      } else {
+        res.send(data);
+      }
+    })
+    .catch((error) => {
+      res.status(500).send({
+        message:
+          error.message ||
+          "Something error occurred while creating a restaurant",
+      });
+    });
+};
+
+//update
+exports.update = async (req, res) => {
+  const id = req.params.id;
+  await Restaurant.update(res.body, {
+    where: {
+      id: id,
+    },
+  })
+    .then((num) => {
+      if (num == 1) {
+        res.send({
+          message: "Restaurant was update",
+        });
+      } else {
+        res.send({
+          message:
+            "can  not update with id : " +
+            id +
+            "maybe restaurant was not found or res.body is empty",
+        });
+      }
+    })
+    .catch((error) => {
+      res.status(500).send({
+        message: "can not update",
+      });
+    });
+};
+
+exports.delete = async(req,res)=>{
+  const id = req.params.id;
+  await Restaurant.destroy({where:{id:id}})
+  .then((num)=>{
+    if(num==1){
+      res.send({
+        message:"Restaurant was deleted"
+      })
+    }else{
+      res.send({
+        message:"can not delete restaurant"
+      })
     }
+   
   }).catch((error)=>{
     res.status(500).send({
-      message:
-              error.message ||
-              "Something error occurred while creating a restaurant",
+      message:"Something error occurred while creating a restaurant "
     })
   })
 }

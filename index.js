@@ -1,6 +1,16 @@
 const express = require('express');
 const app = express();
-const PORT = 5000;
+require("dotenv").config();
+const PORT = process.env.PORT || 9000;
+const restaurantRouter = require("./routers/restaurant.router");
+
+//middelware
+app.use(express.json);
+app.use(express.urlencoded({extended:true}));
+
+//use router
+app.use("/api/v1/restaurant", restaurantRouter)
+
 
 app.get("/",(req,res) => {
     res.send("<h1>Hello restaurant api</h>")

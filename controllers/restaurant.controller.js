@@ -2,9 +2,9 @@ const Restaurant = require("../models/restaurant.model");
 
 // Create and Save a new restaurant
 exports.create = async (req, res) => {
-  const { name, type, imgUrl } = req.body;
+  const { name, type, imageUrl } = req.body;
   // Validate data
-  if (!name || !type || !imgUrl) {
+  if (!name || !type || !imageUrl) {
     res.status(400).send({
       message: "Name, Type or ImageUrl can't be empty!",
     });
@@ -20,7 +20,7 @@ exports.create = async (req, res) => {
     const newRestaurant = {
       name: name,
       type: type,
-      imgUrl: imgUrl,
+      imageUrl: imageUrl,
     };
     Restaurant.create(newRestaurant)
       .then((data) => {

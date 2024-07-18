@@ -25,7 +25,7 @@ const initRole = () => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Use router
-//app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/restaurants", restaurantRouter);
 
 

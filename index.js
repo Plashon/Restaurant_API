@@ -8,9 +8,9 @@ const db = require("./models/");
 const role = db.Role;
 
 //dev mode
-// db.sequelize.sync({force:true}).then(()=>{
+// db.sequelize.sync({force:false}).then(()=>{
 //   initRole();
-//   console.log("drop and stnc data");
+//   console.log("drop and sync data");
 // }) 
 
 const initRole = () => {
@@ -25,7 +25,7 @@ const initRole = () => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Use router
-//app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/restaurants", restaurantRouter);
 
 

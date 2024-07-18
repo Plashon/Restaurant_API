@@ -7,11 +7,11 @@ const bcrypt = require("bcryptjs");
 const { Op } = require("sequelize");
 
 //regester
-exports.singup = async (req, res) => {
+exports.signup = async (req, res) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
     res.status(400).send({
-      message: "plese provide all require fields ",
+      message: "please provide all require fields ",
     });
     return;
   }
@@ -50,7 +50,7 @@ exports.singup = async (req, res) => {
     .catch((error) => {
       res.status(500).send({
         message:
-          error.message || "Somethimg error occured whle register a new user",
+          error.message || "Something error occurred while register a new user",
       });
     });
 };
@@ -59,7 +59,7 @@ exports.signin = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
     res.status(400).send({
-      message: "plese provide all require fields ",
+      message: "please provide all require fields ",
     });
     return;
   }
@@ -79,7 +79,7 @@ exports.signin = async (req, res) => {
       }
       //แปล่งๆ
 
-      const token = jwt.sign({ username: user.userName }, config.secret, {
+      const token = jwt.sign({ id: user.id }, config.secret, {
         expiresIn: "86400",
       });
       const autherities = [];
@@ -90,6 +90,7 @@ exports.signin = async (req, res) => {
             autherities.push("ROLES_" + roles[i].name.toUpperCase());
           }
           res.status(200).send({
+            id:user.id,
             username: user.userName,
             email: user.email,
             roles: autherities,
@@ -98,7 +99,7 @@ exports.signin = async (req, res) => {
         })
         .catch((error) => {
           res.status(500).send({
-            message: error.message || "Somethimg error occured whle get user",
+            message: error.message || "Something error occurred while get user",
           });
         });
     }

@@ -8,14 +8,14 @@ const db = require("./models/");
 const role = db.Role;
 
 //dev mode
-/*db.sequelize.sync({force:true}).then(()=>{
-  initRole();
-  console.log("drop and stnc data");
-}) */
+// db.sequelize.sync({force:true}).then(()=>{
+//   initRole();
+//   console.log("drop and stnc data");
+// }) 
 
 const initRole = () => {
   role.create({ id: 1, name: "user" });
-  role.create({ id: 2, name: "moderrator" });
+  role.create({ id: 2, name: "moderator" });
   role.create({ id: 3, name: "admin" });
 };
 
@@ -25,7 +25,7 @@ const initRole = () => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Use router
-app.use("/api/v1/auth", authRouter);
+//app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/restaurants", restaurantRouter);
 
 

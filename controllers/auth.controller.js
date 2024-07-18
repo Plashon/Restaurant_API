@@ -2,7 +2,7 @@ const config = require("../config/auth.config");
 const db = require("../models/");
 const User = db.User;
 const Role = db.Role;
-const jet = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { Op } = require("sequelize");
 
@@ -53,4 +53,54 @@ exports.singup = async (req, res) => {
           error.message || "Somethimg error occured whle register a new user",
       });
     });
+};
+
+exports.signin = async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    res.status(400).send({
+      message: "plese provide all require fields ",
+    });
+    return;
+  }
+  //select userName by username
+  await User.findOne({ where: { userName: username } }).then((user) => {
+    if (!user) {
+      res.status(404).send({
+        message: "User not found",
+      });
+
+      const passwordIsValid = bcrypt.compareSync(password, user.password);
+      if (!passwordIsValid) {
+        return res.status(401).send({
+          accessToken: null,
+          message: "Invalid password",
+        });
+      }
+      //แปล่งๆ
+
+      const token = jwt.sign({ username: user.userName }, config.secret, {
+        expiresIn: "86400",
+      });
+      const autherities = [];
+      user
+        .getRoles()
+        .then((roles) => {
+          for (let i = 0; i < roles.length; i++) {
+            autherities.push("ROLES_" + roles[i].name.toUpperCase());
+          }
+          res.status(200).send({
+            username: user.userName,
+            email: user.email,
+            roles: autherities,
+            accessToken: token,
+          });
+        })
+        .catch((error) => {
+          res.status(500).send({
+            message: error.message || "Somethimg error occured whle get user",
+          });
+        });
+    }
+  });
 };

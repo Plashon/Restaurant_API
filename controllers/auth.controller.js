@@ -80,7 +80,8 @@ exports.signin = async (req, res) => {
         });
       }
       //แปล่งๆ
-      const token = jwt.sign({ id: user.id }, config.secret, {
+
+      const token = jwt.sign({ username: user.userName }, config.secret, {
         expiresIn: "86400",
       });
       const autherities = [];

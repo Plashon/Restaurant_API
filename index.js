@@ -8,9 +8,9 @@ const db = require("./models/");
 const role = db.Role;
 
 //dev mode
-// db.sequelize.sync({force:true}).then(()=>{
+// db.sequelize.sync({force:false}).then(()=>{
 //   initRole();
-//   console.log("drop and stnc data");
+//   console.log("drop and sync data");
 // }) 
 
 const initRole = () => {

@@ -1,50 +1,61 @@
 const User = require("../models/user.model");
 const Role = require("../models/role.model");
+const { Op } = require("sequelize");
 
 checkDuplicateUsernameOrEmail = async (req, res, next) => {
+  // check username
   await User.findOne({
     where: {
-      username: req.body.userName,
+      userName: req.body.userName,
     },
   }).then((user) => {
     if (user) {
-      res.status(400).send({ message: "failed! Username is already in use" });
+      res.status(400).send({
+        message: "Failed! Username already in use!",
+      });
       return;
     }
+    // check email
     User.findOne({
-      where: { email: req.body.email },
+      where: {
+        email: req.body.email,
+      },
     }).then((user) => {
       if (user) {
-        res.status(400).send({ message: "failed! Email is already in use" });
+        res.status(400).send({
+          message: "Failed! Email already in use!",
+        });
         return;
       }
       next();
+      //   middleware จะมี next เพราะต้องส่งไปให้ซอฟต์แวร์ตัวต่อไป
     });
   });
 };
 
-// check Role Are Valid
+// Check roles are valid
 checkRolesExisted = async (req, res, next) => {
   if (req.body.roles) {
-    Role.findAll({
-      where: {
-        name: { [Op.or]: req.body.roles },
-      },
-    }).then((roles) => {
-      if (roles.length !== req.body.roles.length) {
-        res.status(400).send({ message: "Failed! Role dose not exist" });
-        return;
+    Role.findAll({ where: { name: { [Op.or]: req.body.roles } } }).then(
+      (roles) => {
+        if (roles.length != req.body.roles.length) {
+          res.status(400).send({
+            message: "Failed! Role does not exist.",
+          });
+          return;
+        }
+        next();
       }
-      next();
-    });
+    );
   } else {
     next();
   }
 };
 
-const verifySignUp ={
-    checkRolesExisted,
-    checkDuplicateUsernameOrEmail,
-}
+// verify sign-up
+const verifySignUp = {
+  checkRolesExisted,
+  checkDuplicateUsernameOrEmail,
+};
 
 module.exports = verifySignUp;

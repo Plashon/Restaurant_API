@@ -26,7 +26,7 @@ verifyToken = (req, res, next) => {
 isAdmin = (req, res, next) => {
   User.findByPk(req.userId).then((user) => {
     user.getRoles().then((roles) => {
-      for (let i = 0; i <= roles.length; i++) {
+      for (let i = 0; i < roles.length; i++) {
         if (roles[i].name === "admin") {
           next();
           return;
@@ -42,7 +42,7 @@ isAdmin = (req, res, next) => {
 isMod = (req, res, next) => {
   User.findByPk(req.userId).then((user) => {
     user.getRoles().then((roles) => {
-      for (let i = 0; i <= roles.length; i++) {
+      for (let i = 0; i < roles.length; i++) {
         if (roles[i].name === "moderator") {
           next();
           return;
@@ -58,7 +58,8 @@ isMod = (req, res, next) => {
 isModOrAdmin = (req, res, next) => {
   User.findByPk(req.userId).then((user) => {
     user.getRoles().then((roles) => {
-      for (let i = 0; i <= roles.length; i++) {
+      
+      for (let i = 0; i < roles.length; i++) {
         if (roles[i].name === "moderator" || roles[i].name === "admin") {
           next();
           return;

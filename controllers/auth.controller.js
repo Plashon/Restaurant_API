@@ -24,7 +24,6 @@ exports.signup = async (req, res) => {
     email: email,
     password: bcrypt.hashSync(password, 5),
   };
-
   //   Save user in the DB
   await User.create(newUser)
     .then((user) => {
@@ -38,7 +37,7 @@ exports.signup = async (req, res) => {
         );
       } else {
         // Set default role to user
-        user.setRoles([3]).then(() => {
+        user.setRoles([1]).then(() => {
           res.send({ message: "User registered successfully!" });
         });
       }

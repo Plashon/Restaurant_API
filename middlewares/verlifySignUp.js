@@ -2,7 +2,7 @@ const User = require("../models/user.model");
 const Role = require("../models/role.model");
 const { Op } = require("sequelize");
 
-checkDuplicateUsernameOrEmail = async (req, res, next) => {
+const checkDuplicateUsernameOrEmail = async (req, res, next) => {
   // check username
   await User.findOne({
     where: {
@@ -34,7 +34,7 @@ checkDuplicateUsernameOrEmail = async (req, res, next) => {
 };
 
 // Check roles are valid
-checkRolesExisted = async (req, res, next) => {
+const checkRolesExisted = async (req, res, next) => {
   if (req.body.roles) {
     Role.findAll({ where: { name: { [Op.or]: req.body.roles } } }).then(
       (roles) => {
